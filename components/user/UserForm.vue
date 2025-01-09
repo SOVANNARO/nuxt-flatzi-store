@@ -1,26 +1,18 @@
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Name" name="name">
-      <UInput v-model="state.name" />
-    </UFormGroup>
-    <UFormGroup label="Email" name="email">
-      <UInput v-model="state.email" type="email" />
-    </UFormGroup>
-    <UFormGroup label="Password" name="password">
-      <UInput v-model="state.password" type="password" />
-    </UFormGroup>
+    <Input v-model="state.name" label="Name" name="name" />
+    <Input v-model="state.email" label="Email" name="email" type="email" />
+    <Input v-model="state.password" label="Password" name="password" type="password" />
     <Select
       label="Role"
       name="role"
       v-model="state.role"
       :options="['customer', 'admin']"
     />
-    <UFormGroup label="Avatar" name="avatar">
-      <UInput v-model="state.avatar" />
-    </UFormGroup>
+    <Input v-model="state.avatar" label="Avatar" name="avatar" />
     <div class="flex justify-end">
-      <UButton type="button" @click="cancel" color="gray" class="mr-2">Cancel</UButton>
-      <UButton type="submit" color="primary">{{ props.user ? 'Update' : 'Create' }}</UButton>
+      <Button @click="cancel" label="Cancel" color="gray" buttonClass="mr-2" />
+      <Button type="submit" :label="props.user ? 'Update' : 'Create'" color="primary" />
     </div>
   </UForm>
 </template>
@@ -31,6 +23,8 @@ import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 import type { User } from "~/types/user";
 import Select from "~/components/form/Select.vue";
+import Input from "~/components/form/Input.vue";
+import Button from "~/components/form/Button.vue";
 
 const props = defineProps<{
   user: User | null,

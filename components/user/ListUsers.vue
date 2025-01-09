@@ -1,47 +1,31 @@
 <template>
-  <div class="">
-    <UContainer class="py-8">
+  <div>
+    <UContainer>
       <div class="space-y-6">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold">User Management</h1>
-          <UButton color="primary" @click="showCreateModal = true">Create User</UButton>
+          <Button @click="showCreateModal = true" label="Create User" color="primary" />
         </div>
 
-        <!-- Search Input -->
-        <div class="mb-4">
-          <UInput
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search users..."
-            class="w-1/4"
-            icon="i-heroicons-magnifying-glass-20-solid"
-          />
-        </div>
+        <SearchInput
+          v-model="searchQuery"
+          placeholder="Search users..."
+          inputClass="w-1/4"
+          icon="i-heroicons-magnifying-glass-20-solid"
+        />
 
-        <UTable
+        <Table
           :rows="filteredRows"
           :loading="loading"
-          :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
-          :progress="{ color: 'primary', animation: 'carousel' }"
-          class="w-full"
           :columns="columns"
-        >
-          <template #actions-data="{ row }">
-            <UDropdown :items="items(row)" :popper="{ placement: 'bottom-start' }">
-              <UButton color="gray" variant="ghost">
-                <EllipsisVerticalIcon class="w-5 h-5" />
-              </UButton>
-            </UDropdown>
-          </template>
-        </UTable>
-
-        <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-          <UPagination v-model="page" :page-count="pageCount" :total="userStore.users.length" />
-        </div>
+          :items="items"
+          v-model:page="page"
+          :page-count="pageCount"
+          :total="userStore.users.length"
+        />
       </div>
     </UContainer>
 
-    <!-- Create/Edit Modal -->
     <UModal v-model="showCreateModal">
       <UCard>
         <template #header>
@@ -72,13 +56,11 @@
       </UCard>
     </UModal>
 
-    <!-- View Modal -->
     <UserDetailsModal
       :user="selectedUser"
       v-model:showModal="showViewModal"
     />
 
-    <!-- Confirm Delete Modal -->
     <DeleteConfirmationModal
       :showModal="showDeleteModal"
       @update:showModal="showDeleteModal = $event"
@@ -92,13 +74,15 @@
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
 import { onMounted, ref, computed } from 'vue'
-import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { formatDate } from "~/utils/helper";
 import type { User } from '~/types/user'
 import { useMessage } from "~/composables/useMessage";
-import ToastContainer from "~/components/ToastContainer.vue";
+import ToastContainer from "~/components/shared/ToastContainer.vue";
 import UserDetailsModal from "~/components/user/UserDetailsModal.vue";
-import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue";
+import DeleteConfirmationModal from "~/components/shared/DeleteConfirmationModal.vue";
+import SearchInput from "~/components/form/SearchInput.vue";
+import Table from "~/components/shared/Table.vue";
+import Button from "~/components/form/Button.vue";
 
 const userStore = useUserStore()
 const page = ref(1)
@@ -137,7 +121,7 @@ const columns = [
   { key: 'name', label: 'Name', width: '150px' },
   { key: 'email', label: 'Email', width: '200px' },
   { key: 'role', label: 'Role', width: '100px' },
-  { key: 'creationAt', label: 'Creation At', width: '150px' },
+  { key: 'creationAt', label: 'Created At', width: '150px' },
   { key: 'updatedAt', label: 'Updated At', width: '150px' },
   { key: 'actions', label: 'Actions', width: '50px' }
 ]

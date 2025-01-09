@@ -1,28 +1,35 @@
 <template>
-  <UFormGroup :label="label" :name="name">
-    <UInput v-model="localValue" :type="type" @input="updateValue" />
-  </UFormGroup>
+  <div class="mb-4">
+    <UInput
+      v-model="localValue"
+      type="text"
+      :placeholder="placeholder"
+      :class="inputClass"
+      :icon="icon"
+      @input="updateValue"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
 const props = defineProps({
-  label: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
   modelValue: {
     type: String,
     default: ''
   },
-  type: {
+  placeholder: {
     type: String,
-    default: 'text'
+    default: 'Search...'
+  },
+  inputClass: {
+    type: String,
+    default: 'w-1/4'
+  },
+  icon: {
+    type: String,
+    default: 'i-heroicons-magnifying-glass-20-solid'
   }
 })
 

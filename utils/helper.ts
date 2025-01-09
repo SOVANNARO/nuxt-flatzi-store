@@ -13,13 +13,18 @@ export function formatDate(dateString: string): string {
   return date.toLocaleString('en-US', options).replace(',', ' |');
 }
 
-export async function handleRequest(callback: () => Promise<void>, errorMessage: string, add: (toast: Omit<Toast, 'id'>) => void) {
+export async function handleRequest(
+    callback,
+    errorMessage: string,
+    addToast: (toast: Omit<Toast, 'id'>) => void
+) {
   try {
     await callback();
   } catch (error) {
-    add({
+    const errorDescription = error instanceof Error ? error.message : 'An unexpected error occurred';
+    addToast({
       title: 'Error',
-      description: errorMessage,
+      description: `${errorMessage}: ${errorDescription}`,
       color: 'red',
     });
   }

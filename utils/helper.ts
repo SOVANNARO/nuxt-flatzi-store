@@ -1,3 +1,5 @@
+import type { Toast } from "~/types/toast";
+
 export function formatDate(dateString: string): string {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -9,4 +11,16 @@ export function formatDate(dateString: string): string {
   };
   const date = new Date(dateString);
   return date.toLocaleString('en-US', options).replace(',', ' |');
+}
+
+export async function handleRequest(callback: () => Promise<void>, errorMessage: string, add: (toast: Omit<Toast, 'id'>) => void) {
+  try {
+    await callback();
+  } catch (error) {
+    add({
+      title: 'Error',
+      description: errorMessage,
+      color: 'red',
+    });
+  }
 }
